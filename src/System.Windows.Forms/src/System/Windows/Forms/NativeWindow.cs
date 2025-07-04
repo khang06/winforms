@@ -335,7 +335,8 @@ public unsafe partial class NativeWindow : MarshalByRefObject, IWin32Window, IHa
     ///  in a Message object and invokes the wndProc() method. A WM_NCDESTROY
     ///  message automatically causes the releaseHandle() method to be called.
     /// </summary>
-    private LRESULT Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)
+    // PATCH: Fast ListView update
+    internal LRESULT Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)
     {
         // Note: if you change this code be sure to change the
         // corresponding code in DebuggableCallback below!
