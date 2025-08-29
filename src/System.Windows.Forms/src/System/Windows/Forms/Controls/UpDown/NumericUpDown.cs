@@ -542,7 +542,8 @@ public partial class NumericUpDown : UpDownBase, ISupportInitialize
                 }
                 else
                 {
-                    Value = Constrain(decimal.Parse(Text, CultureInfo.CurrentCulture));
+                    // PATCH: Hack for people who have comma decimal places
+                    Value = Constrain(decimal.Parse(Text.Replace(',', '.'), CultureInfo.InvariantCulture));
                 }
             }
         }
