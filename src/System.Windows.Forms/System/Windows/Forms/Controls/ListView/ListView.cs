@@ -4187,11 +4187,16 @@ public partial class ListView : Control
                     {
                         lvItem.pszText = pText;
 
+                        // PATCH: Fast ListView update hack
+                        /*
                         insertIndex = (int)PInvokeCore.SendMessage(
                             this,
                             PInvoke.LVM_INSERTITEMW,
                             (WPARAM)0,
                             ref lvItem);
+                        */
+                        insertIndex = (int)NativeWindow.FromHandle(Handle)?
+                            .Callback(InternalHandle, PInvoke.LVM_INSERTITEMW, (WPARAM)0, &lvItem);
                     }
 
                     if (actualIndex == -1)
@@ -5533,7 +5538,12 @@ public partial class ListView : Control
         {
             lvItem.pszText = pText;
 
-            PInvokeCore.SendMessage(this, PInvoke.LVM_SETITEMTEXTW, (WPARAM)itemIndex, ref lvItem);
+            // PATCH: Fast ListView update hack
+            //PInvokeCore.SendMessage(this, PInvoke.LVM_SETITEMTEXTW, (WPARAM)itemIndex, ref lvItem);
+            fixed (void* l = &lvItem)
+            {
+                NativeWindow.FromHandle(Handle)?.Callback(InternalHandle, PInvoke.LVM_SETITEMTEXTW, (WPARAM)itemIndex, (LPARAM)l);
+            }
         }
     }
 
